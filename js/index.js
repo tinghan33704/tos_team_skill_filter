@@ -1,18 +1,19 @@
 const team_skill_type_string = [
 ['增攻', '增回', '增血',  ],
 ['主動技改變', '組合技能', '隊長技改變', '兼具隊長技能', '龍脈儀能力', ],
+['召喚獸轉水', '召喚獸轉火', '召喚獸轉木', '召喚獸轉光', '召喚獸轉暗', ],
 ['符石轉水', '符石轉火', '符石轉木', '符石轉光', '符石轉暗', '符石轉心'],
 ['符石轉水強化', '符石轉火強化', '符石轉木強化', '符石轉光強化', '符石轉暗強化', '符石轉心強化'],
-['引爆'],
 ['人族符石製造', '獸族符石製造', '妖族符石製造', '龍族符石製造', '神族符石製造', '魔族符石製造', '機械族符石製造'],
 ['符石強化', '固定轉版'],
 ['符石兼具水', '符石兼具火', '符石兼具木', '符石兼具光', '符石兼具暗', '符石兼具心',],
 ['水兼具其他', '火兼具其他', '木兼具其他', '光兼具其他', '暗兼具其他', '心兼具其他',],
 ['水屬追打', '火屬追打', '木屬追打', '光屬追打', '暗屬追打', '無屬追打'],
-['召喚獸轉水', '召喚獸轉火', '召喚獸轉木', '召喚獸轉光', '召喚獸轉暗', ],
-['掉落率提升', '強制掉落', '強化珠效果提升', '改變消除方式'],
 ['減傷', '回血', '我方傷害吸收', '敵方傷害吸收'],
-['破防', '直傷', '爆擊', '溢補攻擊', '意志', '攻擊力共鳴', '回復力共鳴', '進場減CD', '永久減CD', '開技減CD', '其他減CD', '增加Combo', '增加Ex.Combo', '延長轉珠時間', '龍脈儀蓄能', '行動值提升'],
+['破防', '引爆', '意志', '直傷', '爆擊', '溢補攻擊', '攻擊力共鳴', '回復力共鳴'],
+['符石掉落率提升', '強制掉落', '強化珠效果提升', '改變消除方式'],
+['進場減CD', '永久減CD', '開技減CD', '其他減CD'], 
+['增加Combo', '增加Ex.Combo', '延長轉珠時間', '龍脈儀蓄能', '行動值提升'],
 ['對人類增傷', '對獸類增傷', '對妖精類增傷', '對龍類增傷', '對神族增傷', '對魔族增傷', '對機械族增傷'],
 ['無法行動', '寄生敵方', '暈擊敵方'],
 ['防毒', '無視燃燒', '無視黏腐', '無視電擊', '無視攻前盾', '無視三屬盾', '無視五屬盾', '無視固定連擊盾'],
@@ -40,6 +41,7 @@ var or_filter = true;
 var keyword_search = false;
 var input_maxlength = 50;
 var theme = 'normal';
+var display_mode = 'row';
 
 const skill_num = team_skill_type_string.length;
 const activate_num = team_skill_activate_string.length;
@@ -71,6 +73,7 @@ $(document).ready(function(){
     $("#reset_star").on("click", resetStar);
     $("#reset_keyword").on("click", resetKeyword);
     $("#keyword-switch").on("click", keywordSwitch);
+    $("#switch_display").on("click", displaySwitch);
     
     if(location.search) readUrl();
 });
@@ -174,6 +177,7 @@ function init()
     
     or_filter = true;
     keyword_search = false;
+    display_mode = "row";
 }
 
 function keywordSwitch()
@@ -505,6 +509,37 @@ function startFilter()
         var str = "";
         if(monster_array.length != 0)
         {
+            str += "<div class=\"col-12\">";
+            
+            // Block view
+            
+            str += "    <div class=\"row result_block_view\">";
+            monster_array.forEach(function(x) {
+                var monster_attr = monster_data.find(function(element){
+                    return element.id == x.id;
+                }).attribute;
+                
+                var sk_str = "";
+                
+                for(s of x.nums)
+                {
+                    var skill = monster_data.find(function(element){
+                        return element.id == x.id;
+                    }).skill[s];
+                }
+                
+                str += "<div class=\"col-3 col-md-2 col-lg-1 result\">"+
+                            "<a href=\"https://tos.fandom.com/zh/wiki/"+x.id+"\" target=\"_blank\">"+
+                                "<img class=\"monster_img\" src=\"../tos_skill_filter/img/"+x.id+".png\" title=\""+x.id+"\" onerror=\"this.src='./img/noname_"+attr_zh_to_en[monster_attr]+".png'\"></img>"+
+                            "</a>"+
+                            "<div class=\"monsterId\">"+paddingZeros(x.id, 3)+"</div>"+
+                        "</div>";
+            });
+            str += "    </div>";
+            str += "</div>";
+            
+            
+            // Row view
             
             str += "<div class=\"col-12\">";
             str += "    <div class=\"row result_row_view\">";
@@ -527,15 +562,18 @@ function startFilter()
                     
                     if(skill_cnt == 0)
                     {
-                        str += "        <tr class=\"monster_first_tr\">";
+                        str += "        <tr class=\"monster_first_tr monster_tr_" + attr_zh_to_en[monster_attr] + "\">";
                         str += "            <td class=\"td_monster_icon\" rowspan=" + x.nums.length*2 + ">";
-                        str += "                <img class=\"monster_img\" src=\"../tos_skill_filter/img/" + x.id + ".png\" title=\"" + x.id + "\" onerror=\"this.src='../tos_skill_filter/img/noname_" + attr_zh_to_en[monster_attr] + ".png'\"></img>";
+                        str += "                <a href=\"https://tos.fandom.com/zh/wiki/"+x.id+"\" target=\"_blank\">"
+                        str += "                    <img class=\"monster_img\" src=\"../tos_skill_filter/img/" + x.id + ".png\" title=\"" + x.id + "\" onerror=\"this.src='../tos_skill_filter/img/noname_" + attr_zh_to_en[monster_attr] + ".png'\"></img>";
+                        str += "                    <div class=\"monsterId\">"+paddingZeros(x.id, 3)+"</div>"
+                        str += "                </a>"
                         str += "            </td>";
                     }
                     else
                     {
                         
-                        str += "        <tr class=\"monster_tr\">";
+                        str += "        <tr class=\"monster_tr monster_tr_" + attr_zh_to_en[monster_attr] + "\">";
                     }
                     
                     str += "                <td class=\"td_description\">";
@@ -546,7 +584,7 @@ function startFilter()
                     str += "                </td>";
                     str += "            </tr>";
                     str += "            <tr>";
-                    str += "                <td colspan=2 class=\"td_relative\">";
+                    str += "                <td colspan=2 class=\"td_relative monster_tr_" + attr_zh_to_en[monster_attr] + "\">";
                     for(var j of skill.relative)
                     {
                         str += "                <img class=\"relative_img\" src=\"../tos_skill_filter/img/" + j + ".png\" title=\"" + j + "\" onerror=\"this.src='../tos_skill_filter/img/noname_" + attr_zh_to_en[monster_attr] + ".png'\"></img>";
@@ -556,15 +594,6 @@ function startFilter()
                     
                     skill_cnt ++;
                 }
-                
-                /*
-                str += "<div class=\"col-3 col-md-2 col-lg-1 result\" data-toggle=\"tooltip\" data-html=\"true\" title=\""+sk_str+"\">"+
-                            "<a href=\"https://tos.fandom.com/zh/wiki/"+x.id+"\" target=\"_blank\">"+
-                                "<img class=\"monster_img\" src=\"../tos_skill_filter/img/"+x.id+".png\" title=\""+x.id+"\" onerror=\"this.src='../tos_skill_filter/img/noname_"+attr_zh_to_en[monster_attr]+".png'\"></img>"+
-                            "</a>"+
-                            "<div class=\"monsterId\">"+paddingZeros(x.id, 3)+"</div>"+
-                        "</div>";
-                */
             });
                 
             str += "            <tr class=\"monster_first_tr\">";
@@ -577,11 +606,14 @@ function startFilter()
         }
         else
         {
-            str = "<div class='col-sm-12' style=\"text-align: center; color: #888888;\"><h1>查無結果</h1></div>";
+            str = "<div class='col-12' style=\"padding-top: 20px; text-align: center; color: #888888;\"><h1>查無結果</h1></div>";
         }
         return str;
     });
     $('.result').tooltip({ boundary: 'scrollParent', placement: 'auto', container: 'body'});
+    
+    if(display_mode == 'row') $('.result_block_view').hide();
+    else $('.result_row_view').hide();
     
     $(".search_tag").html(function(){
         var tag_html = "";
@@ -633,6 +665,14 @@ function andOrChange()
     {
         $("#and_or_filter").removeClass("btn-danger").addClass("btn-warning").text("OR 搜尋");
     }
+}
+
+function displaySwitch()
+{
+    $('.result_'+ display_mode +'_view').hide();
+    display_mode = display_mode == "block" ? "row" : "block"
+    $("#switch_display").html(display_mode == "block" ? "<i class=\"fa fa-th-large\"></i>" : "<i class=\"fa fa-list-ul\"></i>");
+    $('.result_'+ display_mode +'_view').show();
 }
 
 function resetSkill()
@@ -861,6 +901,7 @@ function changeTheme()
         '--button_warning',
         '--button_danger',
         '--button_success',
+        '--button_secondary',
         '--text_tag_color', 
         '--monsterid_color', 
         '--text_monsterid_color', 
@@ -871,6 +912,8 @@ function changeTheme()
         '--text_recall_tooltip_color', 
         '--text_charge_tooltip_color',
         '--text_charge_sort_color',
+        '--table_border',
+        '--table_border_center',
     ];
     
     theme = (theme == 'normal')?'dark':'normal';

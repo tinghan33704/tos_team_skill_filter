@@ -16,6 +16,7 @@
     --button_warning_normal: #ffc107;
     --button_danger_normal: #dc3545;
     --button_success_normal: #28a745;
+    --button_secondary_normal: #5a6268;
     --text_tag_color_normal: white;
     --monsterid_color_normal: black;
     --text_monsterid_color_normal: white;
@@ -26,6 +27,8 @@
     --text_recall_tooltip_color_normal: #91DFF3;
     --text_charge_tooltip_color_normal: #FF6666;
     --text_charge_sort_color_normal: #5A01C5;
+    --table_border_normal: #363636;
+    --table_border_center_normal: #777777;
     
     
     /* dark theme */
@@ -45,6 +48,7 @@
     --button_warning_dark: #786004;
     --button_danger_dark: #661823;
     --button_success_dark: #145323;
+    --button_secondary_dark: #5a6268;
     --text_tag_color_dark: #AAAAAA;
     --monsterid_color_dark: black;
     --text_monsterid_color_dark: #AAAAAA;
@@ -55,6 +59,8 @@
     --text_recall_tooltip_color_dark: #70ADD1;
     --text_charge_tooltip_color_dark: #AA4444;
     --text_charge_sort_color_dark: #B088FF;
+    --table_border_dark: #AAAAAA;
+    --table_border_center_dark: #888888;
 
     
     /* theme replacing */
@@ -74,6 +80,7 @@
     --button_warning: var(--button_warning_normal);
     --button_danger: var(--button_danger_normal);
     --button_success: var(--button_success_normal);
+    --button_secondary: var(--button_secondary_normal);
     --text_tag_color: var(--text_tag_color_normal);
     --monsterid_color: var(--monsterid_color_normal);
     --text_monsterid_color: var(--text_monsterid_color_normal);
@@ -84,6 +91,8 @@
     --text_recall_tooltip_color: var(--text_recall_tooltip_color_normal);
     --text_charge_tooltip_color: var(--text_charge_tooltip_color_normal);
     --text_charge_sort_color: var(--text_charge_sort_color_normal);
+    --table_border: var(--table_border_normal);
+    --table_border_center: var(--table_border_center_normal);
 }
 
 body {
@@ -198,6 +207,11 @@ select {
     background-color: var(--button_success);
     border-color: var(--button_success);
 }
+.btn-secondary {
+    background-color: var(--button_secondary);
+    border-color: var(--button_secondary);
+    color: var(--text_color_anti);
+}
 .result {
     margin: 8px 0;
 }
@@ -205,18 +219,37 @@ select {
     vertical-align: middle;
 }
 .monster_first_tr {
-    border-top: 1.5px #363636 solid;
+    border-top: 2px var(--table_border) double;
 }
 .monster_tr {
-    border-top: 1.5px #aaaaaa solid;
+    border-top: 1.5px var(--table_border_center) solid;
+}
+.monster_tr_w {
+    background-color: rgba(206, 225, 255, 0.2);
+}
+.monster_tr_f {
+    background-color: rgba(246, 152, 152, 0.2);
+}
+.monster_tr_e {
+    background-color: rgba(152, 246, 155, 0.2);
+}
+.monster_tr_l {
+    background-color: rgba(246, 232, 152, 0.2);
+}
+.monster_tr_d {
+    background-color: rgba(208, 152, 246, 0.2);
 }
 .td_monster_icon {
     width: 10%;
 }
+.td_description, .td_monster_icon {
+    border-right: 1px solid var(--table_border_center); 
+}
 .td_description, .td_activate {
     width: 45%;
     font-size: 1em;
-    border-left: 1px solid #dee2e6; 
+    color: var(--text_color);
+    border-bottom: 1px solid var(--table_border_center); 
 }
 .td_relative {
     width: 90%;
@@ -244,7 +277,8 @@ select {
     width: 100%;
 }
 .relative_img {
-    max-width: 5%;
+    max-width: 6%;
+    margin: 2px 0;
 }
 .monsterId {
     width: 100%;
