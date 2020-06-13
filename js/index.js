@@ -301,12 +301,12 @@ function startFilter()
             }
             
             var skill_num_array = [];
-            for(var ch = 0; ch < x.skill.length; ch ++)
+            for(var ch = 0; ch < x.team_skill.length; ch ++)
             {
                 if(activate_intersect)
                 {
                     var non = true;
-                    for(var y of x.skill[ch].activate_tag)
+                    for(var y of x.team_skill[ch].activate_tag)
                     {
                         if(activate_set.has(y))
                         {
@@ -322,7 +322,7 @@ function startFilter()
                     var check = false;
                     for(var k of skill_set)
                     {
-                        if(x.skill[ch].skill_tag.includes(k))
+                        if(x.team_skill[ch].skill_tag.includes(k))
                         {
                             check = true;
                             break;
@@ -336,7 +336,7 @@ function startFilter()
                     var check = true;
                     for(var k of skill_set)
                     {
-                        if(!x.skill[ch].skill_tag.includes(k))
+                        if(!x.team_skill[ch].skill_tag.includes(k))
                         {
                             check = false;
                             break;
@@ -525,12 +525,12 @@ function startFilter()
                 {
                     var skill = monster_data.find(function(element){
                         return element.id == x.id;
-                    }).skill[s];
+                    }).team_skill[s];
                 }
                 
                 str += "<div class=\"col-3 col-md-2 col-lg-1 result\">"+
                             "<a href=\"https://tos.fandom.com/zh/wiki/"+x.id+"\" target=\"_blank\">"+
-                                "<img class=\"monster_img\" src=\"../tos_skill_filter/img/"+x.id+".png\" title=\""+x.id+"\" onerror=\"this.src='./img/noname_"+attr_zh_to_en[monster_attr]+".png'\"></img>"+
+                                "<img class=\"monster_img\" src=\"../tos_tool_data/img/monster/"+x.id+".png\" title=\""+x.id+"\" onerror=\"this.src='../tos_tool_data/img/monster/noname_"+attr_zh_to_en[monster_attr]+".png'\"></img>"+
                             "</a>"+
                             "<div class=\"monsterId\">"+paddingZeros(x.id, 3)+"</div>"+
                         "</div>";
@@ -557,7 +557,7 @@ function startFilter()
                 {
                     var skill = monster_data.find(function(element){
                         return element.id == x.id;
-                    }).skill[s];
+                    }).team_skill[s];
                     
                     
                     if(skill_cnt == 0)
@@ -565,7 +565,7 @@ function startFilter()
                         str += "        <tr class=\"monster_first_tr monster_tr_" + attr_zh_to_en[monster_attr] + "\">";
                         str += "            <td class=\"td_monster_icon\" rowspan=" + x.nums.length*2 + ">";
                         str += "                <a href=\"https://tos.fandom.com/zh/wiki/"+x.id+"\" target=\"_blank\">"
-                        str += "                    <img class=\"monster_img\" src=\"../tos_skill_filter/img/" + x.id + ".png\" title=\"" + x.id + "\" onerror=\"this.src='../tos_skill_filter/img/noname_" + attr_zh_to_en[monster_attr] + ".png'\"></img>";
+                        str += "                    <img class=\"monster_img\" src=\"../tos_tool_data/img/monster/" + x.id + ".png\" title=\"" + x.id + "\" onerror=\"this.src='../tos_tool_data/img/monster/noname_" + attr_zh_to_en[monster_attr] + ".png'\"></img>";
                         str += "                    <div class=\"monsterId\">"+paddingZeros(x.id, 3)+"</div>"
                         str += "                </a>"
                         str += "            </td>";
@@ -587,7 +587,7 @@ function startFilter()
                     str += "                <td colspan=2 class=\"td_relative monster_tr_" + attr_zh_to_en[monster_attr] + "\">";
                     for(var j of skill.relative)
                     {
-                        str += "                <img class=\"relative_img\" src=\"../tos_skill_filter/img/" + j + ".png\" title=\"" + j + "\" onerror=\"this.src='../tos_skill_filter/img/noname_" + attr_zh_to_en[monster_attr] + ".png'\"></img>";
+                        str += "                <img class=\"relative_img\" src=\"../tos_tool_data/img/monster/" + j + ".png\" title=\"" + j + "\" onerror=\"this.src='../tos_tool_data/img/monster/noname_" + attr_zh_to_en[monster_attr] + ".png'\"></img>";
                     }
                     str += "                </td>";
                     str += "            </tr>";
