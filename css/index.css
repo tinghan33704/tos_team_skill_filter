@@ -242,6 +242,10 @@ select {
 .td_monster_icon {
     width: 10%;
 }
+.td_monster_icon a {
+    text-decoration: none;
+    color: var(--text_monsterid_color);
+}
 .td_description, .td_monster_icon {
     border-right: 1px solid var(--table_border_center); 
 }
