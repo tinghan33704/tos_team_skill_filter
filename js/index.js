@@ -594,6 +594,10 @@ function startFilter()
                     str += "                <td colspan=2 class=\"td_relative monster_tr_" + attr_zh_to_en[monster_attr] + "\">";
                     for(var j of skill.relative)
                     {
+                        let monster_attr = monster_data.find(function(element){
+                            return element.id == j;
+                        }).attribute;
+                        
                         str += "                <img class=\"relative_img\" src=\"../tos_tool_data/img/monster/" + j + ".png\" title=\"" + j + "\" onerror=\"this.src='../tos_tool_data/img/monster/noname_" + attr_zh_to_en[monster_attr] + ".png'\"></img>";
                     }
                     str += "                </td>";
