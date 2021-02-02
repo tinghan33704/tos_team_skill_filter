@@ -458,12 +458,12 @@ function startFilter()
             }
             
             var skill_num_array = [];
-            for(var ch = 0; ch < x.skill.length; ch ++)
+            for(var ch = 0; ch < x.team_skill.length; ch ++)
             {
                 if(activate_intersect)
                 {
                     var non = true;
-                    for(var y of x.skill[ch].activate_tag)
+                    for(var y of x.team_skill[ch].activate_tag)
                     {
                         if(activate_set.has(y))
                         {
@@ -477,7 +477,7 @@ function startFilter()
                 if(or_filter)
                 {
                     var check = false;
-                    var skill_desc = textSanitizer(x.skill[ch].description); 
+                    var skill_desc = textSanitizer(x.team_skill[ch].description); 
                     for(var k of keyword_set)
                     {
                         if(skill_desc.includes(k))
@@ -492,7 +492,7 @@ function startFilter()
                 else
                 {
                     var check = true;
-                    var skill_desc = textSanitizer(x.skill[ch].description); 
+                    var skill_desc = textSanitizer(x.team_skill[ch].description); 
                     for(var k of keyword_set)
                     {
                         if(!skill_desc.includes(k))
