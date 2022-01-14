@@ -224,9 +224,24 @@ function startFilter()
                             <tr>
                                 <td colspan=2 class="td_relative monster_tr_${attr_zh_to_en[monster_attr]}">
                     `
-                                
-                    $.each(skill.relative, (relative_index, relative_monster) => {
-                        let monster_attr = monster_data.find(function(element){
+                    
+					const relativeMonsters = new Set()
+					$.each(skill.relative, (relative_index, relative_monster) => {
+						if($.isNumeric(relative_monster) || relative_monster[0] == '?') {
+							relativeMonsters.add(relative_monster)
+						} else {
+							const monsterWithTags = monster_data.filter((element) => {
+								return element.monsterTag.includes(relative_monster);
+							}).map(monster => monster.id)
+							
+							$.each(monsterWithTags, (monster_id, monster) => {
+								relativeMonsters.add(monster)
+							})
+						}
+					})
+					
+                    $.each([...relativeMonsters], (relative_index, relative_monster) => {
+                        let monster_attr = monster_data.find((element) => {
                             return element.id == relative_monster;
                         }).attribute;
                         
