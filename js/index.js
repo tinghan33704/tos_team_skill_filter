@@ -187,9 +187,11 @@ function startFilter()
             `;
             
             $.each(monster_array, (index, monster) => {
-                let monster_attr = monster_data.find((element) => {
+				const monster_obj = monster_data.find((element) => {
                     return element.id == monster.id;
-                }).attribute;
+                });
+                const monster_attr = monster_obj?.attribute;
+				const monster_name = monster_obj?.name ?? '';
                 
                 $.each(monster.nums, (num_index, skill_number) => {
                     let skill = monster_data.find((element) => {
@@ -202,7 +204,7 @@ function startFilter()
                             <tr class="monster_first_tr monster_tr_${attr_zh_to_en[monster_attr]}">
                                 <td class="td_monster_icon" rowspan=${monster.nums.length*2}>
                                     <a href="https://tos.fandom.com/zh/wiki/${monster.id}" target="_blank">
-                                        <img class="monster_img" src="../tos_tool_data/img/monster/${monster.id}.png" title="${monster.id}" onerror="this.src='../tos_tool_data/img/monster/noname_${attr_zh_to_en[monster_attr]}.png'"></img>
+                                        <img class="monster_img" src="../tos_tool_data/img/monster/${monster.id}.png" title="${monster_name}" onerror="this.src='../tos_tool_data/img/monster/noname_${attr_zh_to_en[monster_attr]}.png'"></img>
                                         <div class="monsterId">${paddingZeros(monster.id, 3)}</div>
                                     </a>
                                 </td>`;
@@ -241,12 +243,14 @@ function startFilter()
 					})
 					
                     $.each([...relativeMonsters], (relative_index, relative_monster) => {
-                        let monster_attr = monster_data.find((element) => {
+						const monster_obj = monster_data.find((element) => {
                             return element.id == relative_monster;
-                        }).attribute;
+                        })
+                        const monster_attr = monster_obj?.attribute;
+						const monster_name = monster_obj?.name ?? '';
                         
                         str += `
-                                    <img class="relative_img" src="../tos_tool_data/img/monster/${relative_monster}.png" title="${relative_monster}" onerror="this.src='../tos_tool_data/img/monster/noname_${attr_zh_to_en[monster_attr]}.png'">
+                                    <img class="relative_img" src="../tos_tool_data/img/monster/${relative_monster}.png" title="${monster_name}" onerror="this.src='../tos_tool_data/img/monster/noname${monster_attr ? `_${attr_zh_to_en[monster_attr]}` : ''}.png'">
                                     </img>
                         `;
                     })
