@@ -2,7 +2,6 @@ const tool_id = 'team_skill';
 
 let filter_set = new Set();
 let or_filter = true;
-let keyword_search = false;
 let theme = 'normal';
 let display_mode = 'row';
 
@@ -28,131 +27,103 @@ function startFilter()
     let isStarSelected = false;
     let isActivateSelected = false;
     
-    if(keyword_search == false)
-    {
-        filter_set.clear();
-    
-        [skill_set, isSkillSelected] = getSelectedButton('filter');
-        [attr_set, isAttrSelected] = getSelectedButton('attr');
-        [race_set, isRaceSelected] = getSelectedButton('race');
-        [star_set, isStarSelected] = getSelectedButton('star', true);
-        [activate_set, isActivateSelected] = getSelectedButton('activate');
-        
-        $.each(monster_data, (index, monster) => {
-            if( (!monster.star || monster.star <= 0) ||
-                (isAttrSelected && !attr_set.has(monster.attribute)) || 
-                (isRaceSelected && !race_set.has(monster.race)) || 
-                (isStarSelected && !star_set.has(monster.star))) return;
-                
-            if(isSkillSelected) {
-                let skill_num_array = [];
-                
-                $.each(monster.team_skill, (skill_index, monster_skill) => {
-                    if(isActivateSelected && !hasActivateTag(activate_set, monster_skill)) return;
-                    
-                    if(or_filter)       // OR
-                    {
-                        let isSkillMatch = false;
-                        $.each([...skill_set], (skill_set_index, selected_feat) => {
-                            if(monster_skill.skill_tag.includes(selected_feat)) {
-                                isSkillMatch = true;
-                                return false;
-                            }
-                        })
-                        
-                        if(!isSkillMatch) return;
-                    }
-                    else       // AND
-                    {
-                        let isSkillMatch = true;
-                        
-                        $.each([...skill_set], (skill_set_index, selected_feat) => {
-                            if(!(monster_skill.skill_tag.includes(selected_feat))) {
-                                isSkillMatch = false;
-                                return false;
-                            }
-                        })
-                        
-                        if(!isSkillMatch) return;
-                    }
-                    
-                    skill_num_array.push(skill_index);
-                })
-                
-                if(skill_num_array.length > 0) filter_set.add({'id': monster.id, 'nums': skill_num_array});
-            }
-            else {
-                let skill_num_array = [];
-                
-                $.each(monster.team_skill, (skill_index, monster_skill) => {
-                    if(isActivateSelected && !hasActivateTag(activate_set, monster_skill)) return;
-                    
-                    skill_num_array.push(skill_index);
-                })
-                
-                if(skill_num_array.length > 0) filter_set.add({'id': monster.id, 'nums': skill_num_array});
-            }
-        })
-    }
-    else        // keyword search mode
-    {
-        filter_set.clear();
-    
-        let keyword_set = checkKeyword();
-        if(!keyword_set) return;
-        
-        [attr_set, isAttrSelected] = getSelectedButton('attr');
-        [race_set, isRaceSelected] = getSelectedButton('race');
-        [star_set, isStarSelected] = getSelectedButton('star', true);
-        [activate_set, isActivateSelected] = getSelectedButton('activate');
-        
-        $.each(monster_data, (index, monster) => {
-            if( (!monster.star || monster.star <= 0) ||
-                (isAttrSelected && !attr_set.has(monster.attribute)) || 
-                (isRaceSelected && !race_set.has(monster.race)) || 
-                (isStarSelected && !star_set.has(monster.star))) return;
-            
-            let skill_num_array = [];
-            $.each(monster.team_skill, (skill_index, monster_skill) => {
-                if(isActivateSelected && !hasActivateTag(activate_set, monster_skill)) return;
-                
-                if(or_filter)
-                {
-                    let isKeywordChecked = false;
-                    let skill_desc = textSanitizer(monster_skill.description);
-                    
-                    $.each([...keyword_set], (keyword_index, keyword) => {
-                        if(skill_desc.includes(keyword))
-                        {
-                            isKeywordChecked = true;
-                            return false;
-                        }
-                    })
-                    
-                    if(!isKeywordChecked) return;
-                }
-                else
-                {
-                    let isKeywordChecked = true;
-                    let skill_desc = textSanitizer(monster_skill.description);
-                    
-                    $.each([...keyword_set], (keyword_index, keyword) => {
-                        if(!skill_desc.includes(keyword))
-                        {
-                            isKeywordChecked = false;
-                            return false;
-                        }
-                    })
-                    
-                    if(!isKeywordChecked) return;
-                }
-                
-                skill_num_array.push(skill_index);
-            })
-            
-            if(skill_num_array.length > 0) filter_set.add({'id': monster.id, 'nums': skill_num_array});
-        })
-    }
+    filter_set.clear();
+	let keyword_set = checkKeyword();
+
+	[skill_set, isSkillSelected] = getSelectedButton('filter');
+	[attr_set, isAttrSelected] = getSelectedButton('attr');
+	[race_set, isRaceSelected] = getSelectedButton('race');
+	[star_set, isStarSelected] = getSelectedButton('star', true);
+	[activate_set, isActivateSelected] = getSelectedButton('activate');
+	
+	$.each(monster_data, (index, monster) => {
+		if( (!monster.star || monster.star <= 0) ||
+			(isAttrSelected && !attr_set.has(monster.attribute)) || 
+			(isRaceSelected && !race_set.has(monster.race)) || 
+			(isStarSelected && !star_set.has(monster.star))) return;
+			
+		if(isSkillSelected || keyword_set) {
+			let skill_num_array = [];
+			
+			$.each(monster.team_skill, (skill_index, monster_skill) => {
+				if(isActivateSelected && !hasActivateTag(activate_set, monster_skill)) return;
+				
+				if(or_filter)       // OR
+				{
+					// Check for skill tags
+					let isSkillMatch = false;
+					
+					$.each([...skill_set], (skill_set_index, selected_feat) => {
+						if(monster_skill.skill_tag.includes(selected_feat)) {
+							isSkillMatch = true;
+							return false;
+						}
+					})
+					
+					if(!isSkillMatch && keyword_set.size == 0) return;
+					
+					// Check for keywords
+					if(!isSkillMatch && keyword_set.size > 0) {
+						let isKeywordChecked = false;
+						const skill_desc = textSanitizer(monster_skill.description);
+						
+						$.each([...keyword_set], (keyword_index, keyword) => {
+							if(skill_desc.includes(keyword))
+							{
+								isKeywordChecked = true;
+								return false;
+							}
+						})
+						
+						if(!isKeywordChecked) return;
+					}
+				}
+				else       // AND
+				{
+					// Check for skill tags
+					let isSkillMatch = true;
+					
+					$.each([...skill_set], (skill_set_index, selected_feat) => {
+						if(!(monster_skill.skill_tag.includes(selected_feat))) {
+							isSkillMatch = false;
+							return false;
+						}
+					})
+					
+					if(!isSkillMatch) return;
+					
+					// Check for keywords
+					let isKeywordChecked = true;
+					let skill_desc = textSanitizer(monster_skill.description);
+					
+					$.each([...keyword_set], (keyword_index, keyword) => {
+						if(!skill_desc.includes(keyword))
+						{
+							isKeywordChecked = false;
+							return false;
+						}
+					})
+					
+					if(!isKeywordChecked) return;
+				}
+				
+				skill_num_array.push(skill_index);
+			})
+			
+			if(skill_num_array.length > 0) filter_set.add({'id': monster.id, 'nums': skill_num_array});
+		}
+		else {
+			let skill_num_array = [];
+			
+			$.each(monster.team_skill, (skill_index, monster_skill) => {
+				if(isActivateSelected && !hasActivateTag(activate_set, monster_skill)) return;
+				
+				skill_num_array.push(skill_index);
+			})
+			
+			if(skill_num_array.length > 0) filter_set.add({'id': monster.id, 'nums': skill_num_array});
+		}
+	})
     
     $(".row.result-row").show();
     
@@ -292,7 +263,8 @@ function startFilter()
     $(".search_tag").html(() => {
         let tag_html = "";
         
-        tag_html += (!keyword_search) ? renderTags(skill_set, 'skill') : '';
+        tag_html += renderTags(skill_set, 'skill');
+        tag_html += renderTags(keyword_set, 'keyword');
         tag_html += renderTags(activate_set, 'genre');
         tag_html += renderTags(attr_set, 'genre', '屬性');
         tag_html += renderTags(race_set, 'genre');
