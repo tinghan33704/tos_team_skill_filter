@@ -42,7 +42,7 @@ function startFilter()
 			(isRaceSelected && !race_set.has(monster.race)) || 
 			(isStarSelected && !star_set.has(monster.star))) return;
 			
-		if(isSkillSelected || keyword_set) {
+		if(isSkillSelected || keyword_set.size > 0) {
 			let skill_num_array = [];
 			
 			$.each(monster.team_skill, (skill_index, monster_skill) => {
