@@ -45,7 +45,7 @@ function startFilter()
 		if(isSkillSelected || keyword_set.size > 0) {
 			let skill_num_array = [];
 			
-			$.each(monster.team_skill, (skill_index, monster_skill) => {
+			$.each(monster.teamSkill, (skill_index, monster_skill) => {
 				if(isActivateSelected && !hasActivateTag(activate_set, monster_skill)) return;
 				
 				if(or_filter)       // OR
@@ -115,7 +115,7 @@ function startFilter()
 		else {
 			let skill_num_array = [];
 			
-			$.each(monster.team_skill, (skill_index, monster_skill) => {
+			$.each(monster.teamSkill, (skill_index, monster_skill) => {
 				if(isActivateSelected && !hasActivateTag(activate_set, monster_skill)) return;
 				
 				skill_num_array.push(skill_index);
@@ -167,7 +167,7 @@ function startFilter()
                 $.each(monster.nums, (num_index, skill_number) => {
                     let skill = monster_data.find((element) => {
                         return element.id == monster.id;
-                    }).team_skill[skill_number];
+                    }).teamSkill[skill_number];
                     
                     if(num_index == 0)
                     {
